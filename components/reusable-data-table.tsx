@@ -8,6 +8,7 @@ import { DataTableFilterList } from "@/components/data-table/data-table-filter-l
 import { DataTableFilterMenu } from "@/components/data-table/data-table-filter-menu";
 import { DataTableSortList } from "@/components/data-table/data-table-sort-list";
 import { DataTableActionBar } from "@/components/data-table/data-table-action-bar";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { useDataTable } from "@/hooks/use-data-table";
 import type { DataTableFilterField } from "@/types/data-table";
 
@@ -113,10 +114,22 @@ export function ReusableDataTable<TData, TValue>({
 
   const shouldShowActionBar = showActionBar && enableRowSelection;
 
+  if (isLoading) {
+    return (
+      <DataTableSkeleton
+        columnCount={columns.length}
+        rowCount={defaultPageSize}
+        filterCount={filterFields.length}
+        withViewOptions
+        withPagination
+      />
+    );
+  }
+
   return (
     <div className="w-full space-y-4">
       {showAdvancedToolbar && (
-        <DataTableAdvancedToolbar table={table} filterFields={filterFields}>
+        <DataTableAdvancedToolbar table={table}>
           {useFilterMenu ? (
             <DataTableFilterMenu table={table} />
           ) : (
@@ -126,7 +139,7 @@ export function ReusableDataTable<TData, TValue>({
         </DataTableAdvancedToolbar>
       )}
 
-      <DataTable table={table} isLoading={isLoading} />
+      <DataTable table={table} />
 
       {shouldShowActionBar && (
         <DataTableActionBar table={table}>

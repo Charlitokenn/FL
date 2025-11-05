@@ -11,7 +11,7 @@ export function formatDate(
       year: opts.year ?? "numeric",
       ...opts,
     }).format(new Date(date));
-  } catch (_err) {
+  } catch {
     return "";
   }
 }
@@ -30,7 +30,7 @@ export function formatCurrency(
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
-  } catch (_err) {
+  } catch {
     return "";
   }
 }

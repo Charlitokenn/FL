@@ -152,7 +152,7 @@ Columns support various filter types through metadata:
 | `useFilterMenu` | `boolean` | `false` | Use command palette style filters |
 | `showAdvancedToolbar` | `boolean` | `true` | Show toolbar with filters |
 | `showActionBar` | `boolean` | `true` | Show action bar on selection |
-| `isLoading` | `boolean` | `false` | Display loading state |
+| `isLoading` | `boolean` | `false` | Display skeleton loading state |
 
 ## Advanced Features
 
