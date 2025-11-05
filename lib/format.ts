@@ -15,3 +15,22 @@ export function formatDate(
     return "";
   }
 }
+
+export function formatCurrency(
+  amount: number | undefined,
+  currency: string = "USD",
+  locale: string = "en-US",
+) {
+  if (amount === undefined || amount === null) return "";
+
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  } catch (_err) {
+    return "";
+  }
+}

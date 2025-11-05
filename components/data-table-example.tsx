@@ -2,16 +2,15 @@
 
 import * as React from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { 
-  Text, 
-  CalendarIcon, 
-  DollarSign, 
-  Hash,
+import {
+  Text,
+  CalendarIcon,
+  DollarSign,
   CheckCircle2,
   Circle,
   AlertCircle,
   Trash2,
-  MoreHorizontal
+  MoreHorizontal,
 } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { ReusableDataTable } from "@/components/reusable-data-table";
@@ -30,18 +29,22 @@ import { formatDate, formatCurrency } from "@/lib/format";
 import type { DataTableFilterField } from "@/types/data-table";
 
 // Example data type
+export type TransactionStatus = "pending" | "completed" | "failed";
+export type TransactionPriority = "low" | "medium" | "high";
+export type TransactionCategory = "Office" | "Software" | "Travel";
+
 export interface Transaction {
   id: string;
   title: string;
   amount: number;
-  status: "pending" | "completed" | "failed";
-  category: string;
+  status: TransactionStatus;
+  category: TransactionCategory;
   createdAt: Date;
-  priority: "low" | "medium" | "high";
+  priority: TransactionPriority;
 }
 
 // Status configuration
-const statusConfig = {
+const STATUS_CONFIG = {
   pending: {
     label: "Pending",
     icon: Circle,
@@ -50,21 +53,40 @@ const statusConfig = {
   completed: {
     label: "Completed",
     icon: CheckCircle2,
-    variant: "success" as const,
+    variant: "secondary" as const,
   },
   failed: {
     label: "Failed",
     icon: AlertCircle,
     variant: "destructive" as const,
   },
-};
+} as const;
 
 // Priority configuration
-const priorityConfig = {
+const PRIORITY_CONFIG = {
   low: { label: "Low", variant: "outline" as const },
   medium: { label: "Medium", variant: "default" as const },
   high: { label: "High", variant: "destructive" as const },
-};
+} as const;
+
+// Filter options as constants for reusability
+const STATUS_OPTIONS = [
+  { label: "Pending", value: "pending" },
+  { label: "Completed", value: "completed" },
+  { label: "Failed", value: "failed" },
+] as const;
+
+const CATEGORY_OPTIONS = [
+  { label: "Office", value: "Office" },
+  { label: "Software", value: "Software" },
+  { label: "Travel", value: "Travel" },
+] as const;
+
+const PRIORITY_OPTIONS = [
+  { label: "Low", value: "low" },
+  { label: "Medium", value: "medium" },
+  { label: "High", value: "high" },
+] as const;
 
 export function DataTableExample() {
   // Example data
@@ -174,8 +196,8 @@ export function DataTableExample() {
           <DataTableColumnHeader column={column} title="Status" />
         ),
         cell: ({ row }) => {
-          const status = row.getValue("status") as keyof typeof statusConfig;
-          const config = statusConfig[status];
+          const status = row.getValue("status") as TransactionStatus;
+          const config = STATUS_CONFIG[status];
           const Icon = config.icon;
 
           return (
@@ -188,11 +210,7 @@ export function DataTableExample() {
         meta: {
           label: "Status",
           variant: "select",
-          options: [
-            { label: "Pending", value: "pending" },
-            { label: "Completed", value: "completed" },
-            { label: "Failed", value: "failed" },
-          ],
+          options: STATUS_OPTIONS,
         },
         enableColumnFilter: true,
         filterFn: (row, id, value) => {
@@ -212,11 +230,7 @@ export function DataTableExample() {
         meta: {
           label: "Category",
           variant: "select",
-          options: [
-            { label: "Office", value: "Office" },
-            { label: "Software", value: "Software" },
-            { label: "Travel", value: "Travel" },
-          ],
+          options: CATEGORY_OPTIONS,
         },
         enableColumnFilter: true,
         filterFn: (row, id, value) => {
@@ -250,8 +264,8 @@ export function DataTableExample() {
           <DataTableColumnHeader column={column} title="Priority" />
         ),
         cell: ({ row }) => {
-          const priority = row.getValue("priority") as keyof typeof priorityConfig;
-          const config = priorityConfig[priority];
+          const priority = row.getValue("priority") as TransactionPriority;
+          const config = PRIORITY_CONFIG[priority];
 
           return (
             <Badge variant={config.variant}>
@@ -262,11 +276,7 @@ export function DataTableExample() {
         meta: {
           label: "Priority",
           variant: "select",
-          options: [
-            { label: "Low", value: "low" },
-            { label: "Medium", value: "medium" },
-            { label: "High", value: "high" },
-          ],
+          options: PRIORITY_OPTIONS,
         },
         enableColumnFilter: true,
         filterFn: (row, id, value) => {
@@ -307,40 +317,31 @@ export function DataTableExample() {
   );
 
   // Filter fields configuration
-  const filterFields: DataTableFilterField<Transaction>[] = [
-    {
-      id: "title",
-      label: "Title",
-      placeholder: "Search titles...",
-    },
-    {
-      id: "status",
-      label: "Status",
-      options: [
-        { label: "Pending", value: "pending" },
-        { label: "Completed", value: "completed" },
-        { label: "Failed", value: "failed" },
-      ],
-    },
-    {
-      id: "category",
-      label: "Category",
-      options: [
-        { label: "Office", value: "Office" },
-        { label: "Software", value: "Software" },
-        { label: "Travel", value: "Travel" },
-      ],
-    },
-    {
-      id: "priority",
-      label: "Priority",
-      options: [
-        { label: "Low", value: "low" },
-        { label: "Medium", value: "medium" },
-        { label: "High", value: "high" },
-      ],
-    },
-  ];
+  const filterFields: DataTableFilterField<Transaction>[] = React.useMemo(
+    () => [
+      {
+        id: "title" as keyof Transaction,
+        label: "Title",
+        placeholder: "Search titles...",
+      },
+      {
+        id: "status" as keyof Transaction,
+        label: "Status",
+        options: STATUS_OPTIONS,
+      },
+      {
+        id: "category" as keyof Transaction,
+        label: "Category",
+        options: CATEGORY_OPTIONS,
+      },
+      {
+        id: "priority" as keyof Transaction,
+        label: "Priority",
+        options: PRIORITY_OPTIONS,
+      },
+    ],
+    []
+  );
 
   return (
     <ReusableDataTable
@@ -353,19 +354,17 @@ export function DataTableExample() {
       enableRowSelection
       useFilterMenu={false} // Set to true for command palette style
       renderActionBarContent={(table) => (
-        <>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const selectedRows = table.getFilteredSelectedRowModel().rows;
-              console.log("Delete", selectedRows.length, "items");
-            }}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete ({table.getFilteredSelectedRowModel().rows.length})
-          </Button>
-        </>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const selectedRows = table.getFilteredSelectedRowModel().rows;
+            console.log("Delete", selectedRows.length, "items");
+          }}
+        >
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete ({table.getFilteredSelectedRowModel().rows.length})
+        </Button>
       )}
     />
   );

@@ -11,6 +11,11 @@ import { DataTableActionBar } from "@/components/data-table/data-table-action-ba
 import { useDataTable } from "@/hooks/use-data-table";
 import type { DataTableFilterField } from "@/types/data-table";
 
+// Default configuration constants
+const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_SORTING: { id: string; desc: boolean }[] = [];
+const DEFAULT_FILTER_FIELDS: DataTableFilterField<unknown>[] = [];
+
 interface ReusableDataTableProps<TData, TValue> {
   /**
    * The data to display in the table
@@ -82,9 +87,9 @@ export function ReusableDataTable<TData, TValue>({
   data,
   columns,
   pageCount,
-  filterFields = [],
-  defaultPageSize = 10,
-  defaultSorting = [],
+  filterFields = DEFAULT_FILTER_FIELDS as DataTableFilterField<TData>[],
+  defaultPageSize = DEFAULT_PAGE_SIZE,
+  defaultSorting = DEFAULT_SORTING,
   getRowId,
   enableRowSelection = true,
   renderActionBarContent,
@@ -106,6 +111,8 @@ export function ReusableDataTable<TData, TValue>({
     enableRowSelection,
   });
 
+  const shouldShowActionBar = showActionBar && enableRowSelection;
+
   return (
     <div className="w-full space-y-4">
       {showAdvancedToolbar && (
@@ -121,7 +128,7 @@ export function ReusableDataTable<TData, TValue>({
 
       <DataTable table={table} isLoading={isLoading} />
 
-      {showActionBar && enableRowSelection && (
+      {shouldShowActionBar && (
         <DataTableActionBar table={table}>
           {renderActionBarContent?.(table)}
         </DataTableActionBar>
