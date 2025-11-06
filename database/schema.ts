@@ -2,7 +2,7 @@ import { varchar, uuid, pgTable, pgEnum,date, timestamp } from 'drizzle-orm/pg-c
 
 export const APPROVAL_STATUS_ENUM = pgEnum('approval_status', ['APPROVED', 'REJECTED', 'PENDING']);
 
-export const usersTable = pgTable('users', {
+export const users = pgTable('users', {
   id: uuid('id').notNull().primaryKey().defaultRandom().unique(),
   fullname: varchar('full_name').notNull(),
   email: varchar('email').notNull().unique(),
