@@ -28,16 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <NuqsAdapter>
-          {children}
-        </NuqsAdapter>
-      </body>
-    </html>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          formButtonPrimary: "bg-black hover:bg-gray-900 text-sm normal-case",
+        },
+      }}
+    >
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
