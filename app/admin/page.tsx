@@ -1,32 +1,28 @@
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 import { CreateTenantForm } from '@/components/admin/create-tenant-form';
 import { AddUserForm } from '@/components/admin/add-user-form';
 import { listAllTenants } from '@/app/actions/tenant-actions';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { CreateOrganization, OrganizationSwitcher, SignOutButton } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 
 export default async function AdminPage() {
-  const { userId, sessionClaims } = await auth();
-
-  // Double-check auth (middleware should handle this)
-  if (!userId || sessionClaims?.metadata?.role !== 'super-admin') {
-    redirect('/unauthorized');
-  }
-
   const result = await listAllTenants();
   const tenants = result.tenants || [];
+
+  const { userId, sessionClaims, redirectToSignIn } = await auth();
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-7xl">
       <div className="flex items-center justify-between mb-8">
         <div>
+          <SignOutButton />
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-1">
             Manage organizations, users, and subdomains
           </p>
         </div>
-        <CreateTenantForm />
+        <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl={`/s/${sessionClaims?.o?.slg}`} />
       </div>
 
       <div className="rounded-lg border bg-card">

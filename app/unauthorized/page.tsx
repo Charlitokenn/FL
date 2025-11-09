@@ -14,8 +14,7 @@ export default function UnauthorizedPage() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Access Denied</h1>
           <p className="text-muted-foreground">
-            You don't have permission to access this resource. Please contact your
-            administrator if you believe this is an error.
+            You don't have permission to access this resource.
           </p>
         </div>
         <Button asChild>

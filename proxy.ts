@@ -1,74 +1,57 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getTenantBySubdomain } from '@/lib/tenants';
+import { rootDomain } from '@/lib/utils';
 
-const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)']);
+const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)',]);
 const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  const url = req.nextUrl;
-  const hostname = req.headers.get('host') || '';
-  
-  // Extract subdomain
-  const subdomain = getSubdomain(hostname);
-  
-  // Get auth info
+  const { pathname } = req.nextUrl;
+  const subdomain = extractSubdomain(req);
   const { userId, sessionClaims, redirectToSignIn } = await auth();
 
-  // Handle public routes (sign-in, sign-up)
+  if (subdomain) {
+    const userOrgSlug = sessionClaims?.o?.slg;
+
+    // For public routes on subdomains, allow them (don't redirect)
+    if (isPublicRoute(req)) {
+      return NextResponse.next();
+    }
+
+    // For protected routes, require auth + matching org
+    if (!userId) {
+      return redirectToSignIn();
+    }
+
+    if (userOrgSlug !== subdomain) {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
+    }
+
+    if (pathname.startsWith('/admin')) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    if (pathname === '/') {
+      return NextResponse.rewrite(new URL(`/s/${subdomain}`, req.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  // Root domain logic stays the same
   if (isPublicRoute(req)) {
     return NextResponse.next();
   }
 
-  // Handle admin routes - require super-admin role
   if (isAdminRoute(req)) {
-    if (!userId) {
-      return redirectToSignIn();
-    }
-
-    const isSuperAdmin = sessionClaims?.metadata?.role === 'super-admin';
-    if (!isSuperAdmin) {
+    if (!userId) return redirectToSignIn();
+    if (sessionClaims?.o?.rol !== 'super_admin') {
       return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
-
     return NextResponse.next();
   }
 
-  // Handle subdomain routing
-  if (subdomain && subdomain !== 'www' && subdomain !== 'admin') {
-    // Validate tenant exists
-    const tenant = await getTenantBySubdomain(subdomain);
-    
-    if (!tenant) {
-      return NextResponse.redirect(new URL('/tenant-not-found', req.url));
-    }
-
-    // Check if user is authenticated
-    if (!userId) {
-      return redirectToSignIn();
-    }
-
-    // Verify user belongs to the organization
-    const userOrgId = sessionClaims?.org_id;
-    if (userOrgId !== tenant.clerkOrgId) {
-      return NextResponse.redirect(new URL('/unauthorized', req.url));
-    }
-
-    // Add tenant info to headers for server components
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set('x-tenant-id', tenant.id);
-    requestHeaders.set('x-tenant-subdomain', tenant.subdomain);
-    requestHeaders.set('x-tenant-org-id', tenant.clerkOrgId);
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  }
-
-  // Main domain - redirect to admin or require auth
   if (!userId) {
     return redirectToSignIn();
   }
@@ -76,20 +59,43 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   return NextResponse.next();
 });
 
-function getSubdomain(hostname: string): string | null {
-  const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN || 'localhost:3000';
-  const baseDomain = appDomain.split(':')[0];
-  
-  // Remove port if exists
-  const host = hostname.split(':')[0];
-  
-  // Check if this is a subdomain
-  if (host.endsWith(`.${baseDomain}`)) {
-    const subdomain = host.replace(`.${baseDomain}`, '');
-    return subdomain;
+function extractSubdomain(request: NextRequest): string | null {
+  const url = request.url;
+  const host = request.headers.get('host') || '';
+  const hostname = host.split(':')[0];
+
+  // Local development environment
+  if (url.includes('localhost') || url.includes('127.0.0.1')) {
+    // Try to extract subdomain from the full URL
+    const fullUrlMatch = url.match(/http:\/\/([^.:]+)\.localhost/);
+    if (fullUrlMatch && fullUrlMatch[1]) {
+      return fullUrlMatch[1];
+    }
+
+    // Fallback to host header approach
+    if (hostname.includes('.localhost')) {
+      return hostname.split('.')[0];
+    }
+
+    return null;
   }
-  
-  return null;
+
+  // Production environment
+  const rootDomainFormatted = rootDomain.split(':')[0];
+
+  // Handle preview deployment URLs (tenant---branch-name.vercel.app)
+  if (hostname.includes('---') && hostname.endsWith('.vercel.app')) {
+    const parts = hostname.split('---');
+    return parts.length > 0 ? parts[0] : null;
+  }
+
+  // Regular subdomain detection
+  const isSubdomain =
+    hostname !== rootDomainFormatted &&
+    hostname !== `www.${rootDomainFormatted}` &&
+    hostname.endsWith(`.${rootDomainFormatted}`);
+
+  return isSubdomain ? hostname.replace(`.${rootDomainFormatted}`, '') : null;
 }
 
 export const config = {

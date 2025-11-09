@@ -29,7 +29,7 @@ export async function createTenantWithOrganization(
     // Verify super-admin access
     const { userId, sessionClaims } = await auth();
     
-    if (!userId || sessionClaims?.metadata?.role !== 'super-admin') {
+    if (!userId || sessionClaims?.credentials !== 'super-admin') {
       return { success: false, error: 'Unauthorized: Super admin access required' };
     }
 
@@ -153,7 +153,7 @@ export async function addUserToOrganization(
     // Verify super-admin access
     const { userId, sessionClaims } = await auth();
     
-    if (!userId || sessionClaims?.metadata?.role !== 'super-admin') {
+    if (!userId || sessionClaims?.credentials !== 'super-admin') {
       return { success: false, error: 'Unauthorized: Super admin access required' };
     }
 
@@ -209,7 +209,7 @@ export async function listAllTenants(): Promise<ListTenantsResult> {
     // Verify super-admin access
     const { userId, sessionClaims } = await auth();
     
-    if (!userId || sessionClaims?.metadata?.role !== 'super-admin') {
+    if (!userId || sessionClaims?.credentials !== 'super-admin') {
       return { success: false, error: 'Unauthorized: Super admin access required' };
     }
 

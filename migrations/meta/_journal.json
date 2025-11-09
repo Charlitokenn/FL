@@ -15,6 +15,13 @@
       "when": 1762394193271,
       "tag": "0001_short_sharon_ventura",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1762441533661,
+      "tag": "0002_little_wild_pack",
+      "breakpoints": true
     }
   ]
 }

@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlowLedger - Multitenant SaaS
 
-## Getting Started
+A production-ready multitenant SaaS application built with Next.js 16, featuring subdomain-based routing, organization management, and enterprise-grade authentication.
 
-First, run the development server:
+## 🚀 Features
+
+- ✅ **Subdomain-Based Multitenancy** - Each organization gets their own subdomain
+- ✅ **Clerk Authentication** - Enterprise-grade auth with organization support
+- ✅ **Redis Caching** - Fast tenant lookup and data caching
+- ✅ **Type-Safe Database** - Drizzle ORM with PostgreSQL
+- ✅ **Admin Dashboard** - Manage organizations and users
+- ✅ **Role-Based Access** - Super-admin and organization-level permissions
+- ✅ **Clean Architecture** - Maintainable and scalable codebase
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [QUICKSTART.md](./QUICKSTART.md) | Get up and running in minutes |
+| [SETUP.md](./SETUP.md) | Detailed setup instructions |
+| [CLERK_SETUP.md](./CLERK_SETUP.md) | Clerk configuration and metadata setup |
+| [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) | Architecture and code organization |
+| [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md) | What's been built and how it works |
+
+## 🏃 Quick Start
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Copy environment variables
+cp .env.example .env.local
+# Then fill in your Clerk, Neon, and Upstash credentials
+
+# 3. Push database schema
+npm run db:push
+
+# 4. Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Then:**
+1. Sign up and set yourself as super-admin in Clerk Dashboard
+2. Visit `http://localhost:3000/admin` to create organizations
+3. Edit hosts file to test subdomains locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+See [QUICKSTART.md](./QUICKSTART.md) for detailed instructions.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ Tech Stack
 
-## Learn More
+- **Framework**: Next.js 16 (App Router)
+- **Authentication**: Clerk
+- **Database**: Neon PostgreSQL
+- **ORM**: Drizzle
+- **Caching**: Upstash Redis
+- **UI**: Radix UI + Tailwind CSS
+- **Language**: TypeScript
 
-To learn more about Next.js, take a look at the following resources:
+## 🔑 Key Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Subdomain Routing
+Each organization automatically gets a subdomain:
+```
+acme.yourdomain.com → Acme Corp dashboard
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Admin Dashboard
+Super-admins can:
+- Create organizations with custom subdomains
+- Add users to organizations
+- Manage organization settings
 
-## Deploy on Vercel
+### Tenant Context
+Easily access tenant data in server components:
+```typescript
+import { getCurrentTenant } from '@/lib/tenant-context';
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+export default async function MyPage() {
+  const tenant = await getCurrentTenant();
+  // Use tenant.id to filter data
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📦 Environment Variables
+
+Required environment variables (see `.env.example`):
+
+```bash
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+
+# Neon Database
+DATABASE_URL=
+
+# Upstash Redis
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+
+# App Configuration
+NEXT_PUBLIC_APP_DOMAIN=localhost:3000
+```
+
+## 🧪 Development
+
+```bash
+# Run development server
+npm run dev
+
+# Check types
+npm run build
+
+# Database operations
+npm run db:push      # Push schema changes
+npm run db:generate  # Generate migrations
+npm run db:studio    # Open Drizzle Studio
+```
+
+## 🚀 Deployment
+
+See [SETUP.md](./SETUP.md) for production deployment details.
+
+---
+
+**Need help?** Check out the [QUICKSTART.md](./QUICKSTART.md) guide!
+
+**Ready to build?** Start with `npm run dev` and visit `/admin`!
