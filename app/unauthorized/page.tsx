@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { OrganizationSwitcher, UserButton, UserProfile } from '@clerk/nextjs';
 import { ShieldAlertIcon } from 'lucide-react';
 import Link from 'next/link';
 
