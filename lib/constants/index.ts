@@ -1,0 +1,105 @@
+import { LayoutDashboard, BookOpen, Settings2, Group } from "lucide-react";
+
+export const SIDEBAR_MENU_ITEMS = [
+    {
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+      isActive: true,
+    },
+    {
+      title: "Contacts",
+      url: "/contacts",
+      icon: Group,
+    },
+    {
+      title: "Clients",
+      url: "/clients",
+      icon: Group,
+    },
+    {
+      title: "Sales",
+      url: "#",
+      icon: Group,
+      items: [
+            {
+                title: "Leader Board",
+                url: "/leader-board",
+            },
+            {
+                title: "Daily Sales",
+                url: "/daily-sales",
+            }
+        ]
+    },          
+    {
+      title: "Finance",
+      url: "#",
+      icon: Group,
+      items: [
+        {
+          title: "Receipts",
+          url: "/receipts",
+        },
+        {
+          title: "Expenses",
+          url: "/expenses",
+        },
+        {
+          title: "Reminder",
+          url: "/reminder",
+        },
+        {
+          title: "Client Statement",
+          url: "/client-statement",
+        },  
+        {
+          title: "Reconciliation",
+          url: "/reconciliation",
+        },   
+        {
+          title: "Debtor Aging",
+          url: "/aging",
+        },                   
+      ],
+    },
+    {
+      title: "Projects",
+      url: "#",
+      icon: BookOpen,
+      items: [
+        {
+          title: "Project List",
+          url: "/projects",
+        },
+        {
+          title: "Plots",
+          url: "/plots",
+        },
+        {
+          title: "Project Payments",
+          url: "/project-payments",
+        },
+      ],
+    },
+    {
+      title: "Suppliers",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Supplier List",
+          url: "/suppliers",
+        },
+        {
+          title: "Supplier Payments",
+          url: "/supplier-payments",
+        },
+      ],
+    },
+    {
+      title: "Messaging",
+      url: "/messaging",
+      icon: Settings2,
+    },    
+  ]
