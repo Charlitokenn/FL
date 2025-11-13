@@ -52,8 +52,6 @@ export function NavMain({
     }
   }, [pathname])
 
-  console.log({ pathname })
-
   return (
     <SidebarGroup>
       {/* <SidebarGroupLabel>Platform</SidebarGroupLabel> */}

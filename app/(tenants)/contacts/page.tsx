@@ -10,8 +10,13 @@ export const metadata: Metadata = {
 };
 
 const ContactsPage = async ({ sessionClaims }:{ sessionClaims: any}) => {
-  const contacts = await GetAllContacts()
-  console.log({contacts})
+  const { success, data, error } = await GetAllContacts();
+
+  if (success) {
+      console.log({data});
+  } else {
+      console.error(error);
+  }
 
   return (
     <section>
