@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 const PlotsPage = () => {
   return (
-    <div>Plots Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Plots"
+        subtitle={`Here you can view, add and edit your projects' plots`}
+      />
+    </section>
   )
 }
 

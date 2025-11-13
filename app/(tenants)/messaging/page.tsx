@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 const MessagingPage = () => {
   return (
-    <div>Messaging Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Messaging"
+        subtitle={`Here you can send reminder messages to clients and contacts `}
+      />
+    </section>
   )
 }
 

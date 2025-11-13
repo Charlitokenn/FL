@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 const ReminderPage = () => {
   return (
-    <div>Reminder Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Reminder"
+        subtitle={`Here you can follow up and provide comments on the due, overdue and upcoming installments`}
+      />
+    </section>
   )
 }
 

@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 const ProjectPaymentsPage = () => {
   return (
-    <div>Project Payments Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Project Payments"
+        subtitle={`Here you can manage all your projects' payments`}
+      />
+    </section>
   )
 }
 

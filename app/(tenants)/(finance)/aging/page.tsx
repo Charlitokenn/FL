@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 const DebtorAgingPage = () => {
   return (
-    <div>Debtor Aging Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Debtor Aging"
+        subtitle={`Here you can view and download the debtors aging report`}
+      />
+    </section>
   )
 }
 

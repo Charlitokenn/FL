@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,9 +8,15 @@ export const metadata: Metadata = {
   },
 };
 
-const ContactsPage = () => {
+const ContactsPage = ({ sessionClaims }:{ sessionClaims: any}) => {
   return (
-    <div>Contacts Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Contacts"
+        subtitle={`Here you can manage all contacts`}
+      />
+    </section>
   )
 }
 

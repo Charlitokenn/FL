@@ -3,6 +3,8 @@ import { Ubuntu_Sans } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 
 const ubuntuSans = Ubuntu_Sans({
   variable: "--font-ubuntu-sans",
@@ -30,9 +32,14 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className={`${ubuntuSans.variable} antialiased`}>
-          <NuqsAdapter>{children}</NuqsAdapter>
+          <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+            <NuqsAdapter>
+              {children}
+              <Toaster position="top-right" className="top-18! right-6!" />
+            </NuqsAdapter>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -1,3 +1,4 @@
+import PageHero from "@/components/ui/pageHero";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 const ReconciliationPage = () => {
   return (
-    <div>Reconciliation Page</div>
+    <section>
+      <PageHero
+        type="hero"
+        title="Reconciliation"
+        subtitle={`Here you can create, edit and manage all your reconciliations`}
+      />
+    </section>
   )
 }
 

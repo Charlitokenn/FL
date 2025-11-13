@@ -7,9 +7,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -24,9 +21,19 @@ import {
 } from 'lucide-react';
 import { SIDEBAR_MENU_ITEMS } from '@/lib/constants';
 import { NavMain } from './nav-main';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
-export const TenantSidebar = memo(() => {
+interface Props {
+  userName?: string;
+  logo?: string;
+  orgName?: string;
+  role?: string;
+}
+  
+export const TenantSidebar = memo(({userName, logo, orgName, role} : Props) => {
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname()
 
   return (
     <Sidebar collapsible="icon">
@@ -34,13 +41,14 @@ export const TenantSidebar = memo(() => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link prefetch={false} href="#dashboard">
+              <Link prefetch={false} href="/">
                 <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <LayoutDashboard className="h-5 w-5" />
+                  {logo && <Image src={logo} alt={`${orgName} logo`} width={32} height={32} />}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">TechCorp</span>
-                  <span className="truncate text-xs">Admin Panel</span>
+                  <span className="truncate font-semibold">{orgName}</span>
+                  <span className="truncate text-xs">{role === "member" ? "Staff" : "Admin"} Panel</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -49,7 +57,7 @@ export const TenantSidebar = memo(() => {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={SIDEBAR_MENU_ITEMS} />
+        <NavMain items={SIDEBAR_MENU_ITEMS} pathname={pathname} />
       </SidebarContent>
 
       <SidebarFooter>

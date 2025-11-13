@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 
 export function NavMain({
-  items,
+  items, pathname
 }: {
   items: {
     title: string
@@ -31,15 +31,32 @@ export function NavMain({
       title: string
       url: string
     }[]
-  }[]
+  }[],
+  pathname: string
 }) {
-  const [openItem, setOpenItem] = useState<string | null>(
-    items.find((item) => item.isActive && item.items?.length)?.title ?? null
-  )
+  // Find the parent item that contains a subitem matching the current pathname
+  const findOpenItem = () => {
+    const activeParent = items.find((item) =>
+      item.items?.some((subItem) => subItem.url === pathname)
+    )
+    return activeParent?.title ?? null
+  }
+
+  const [openItem, setOpenItem] = useState<string | null>(findOpenItem())
+
+  // Update openItem when pathname changes
+  useEffect(() => {
+    const newOpenItem = findOpenItem()
+    if (newOpenItem) {
+      setOpenItem(newOpenItem)
+    }
+  }, [pathname])
+
+  console.log({ pathname })
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      {/* <SidebarGroupLabel>Platform</SidebarGroupLabel> */}
       <SidebarMenu>
         {items.map((item) => {
           const hasItems = item.items && item.items.length > 0
@@ -67,7 +84,7 @@ export function NavMain({
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
+                          <SidebarMenuSubButton className={pathname === subItem.url ? "bg-primary" : ""} asChild>
                             <a href={subItem.url}>
                               <span>{subItem.title}</span>
                             </a>
@@ -83,7 +100,7 @@ export function NavMain({
 
           return (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild tooltip={item.title}>
+              <SidebarMenuButton className={pathname === item.url ? "bg-primary" : ""} asChild tooltip={item.title}>
                 <a href={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>

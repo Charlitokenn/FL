@@ -1,16 +1,16 @@
-import { LayoutDashboard, BookOpen, Settings2, Group } from "lucide-react";
+import { Group, Users, ShoppingCart, Wallet, Archive, Store, MessagesSquare, Gauge } from "lucide-react";
 
 export const SIDEBAR_MENU_ITEMS = [
     {
       title: "Dashboard",
       url: "/",
-      icon: LayoutDashboard,
+      icon: Gauge,
       isActive: true,
     },
     {
       title: "Contacts",
       url: "/contacts",
-      icon: Group,
+      icon: Users,
     },
     {
       title: "Clients",
@@ -20,22 +20,22 @@ export const SIDEBAR_MENU_ITEMS = [
     {
       title: "Sales",
       url: "#",
-      icon: Group,
+      icon: ShoppingCart,
       items: [
-            {
-                title: "Leader Board",
-                url: "/leader-board",
-            },
             {
                 title: "Daily Sales",
                 url: "/daily-sales",
-            }
+            },
+            {
+                title: "Leader Board",
+                url: "/leader-board",
+            }            
         ]
     },          
     {
       title: "Finance",
       url: "#",
-      icon: Group,
+      icon: Wallet,
       items: [
         {
           title: "Receipts",
@@ -66,7 +66,7 @@ export const SIDEBAR_MENU_ITEMS = [
     {
       title: "Projects",
       url: "#",
-      icon: BookOpen,
+      icon: Archive,
       items: [
         {
           title: "Project List",
@@ -85,7 +85,7 @@ export const SIDEBAR_MENU_ITEMS = [
     {
       title: "Suppliers",
       url: "#",
-      icon: Settings2,
+      icon: Store,
       items: [
         {
           title: "Supplier List",
@@ -100,6 +100,6 @@ export const SIDEBAR_MENU_ITEMS = [
     {
       title: "Messaging",
       url: "/messaging",
-      icon: Settings2,
+      icon: MessagesSquare,
     },    
   ]
