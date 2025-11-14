@@ -70,14 +70,6 @@ export const TenantSidebar = memo(({logo, orgName, role} : Props ) => {
               <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link prefetch={false} href="#profile">
-                <User />
-                <span>Admin Profile</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />

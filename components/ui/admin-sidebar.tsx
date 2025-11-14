@@ -85,14 +85,6 @@ export const AdminSidebar = memo(({logo, orgName, role, menuItems} : Props ) => 
               <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link prefetch={false} href="#profile">
-                <User />
-                <span>Admin Profile</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
