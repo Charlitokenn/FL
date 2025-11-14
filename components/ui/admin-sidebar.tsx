@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { ForwardRefExoticComponent, memo, RefAttributes } from 'react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import {
@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/sidebar';
 import {
   LayoutDashboard,
+  LucideIcon,
+  LucideProps,
   Moon,
   Sun,
   User,
@@ -23,15 +25,28 @@ import { SIDEBAR_MENU_ITEMS } from '@/lib/constants';
 import { NavMain } from './nav-main';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import config from '@/lib/config/app-config';
+
+interface MenuItemsType {
+    title: string
+    url: string
+    icon?: LucideIcon
+    isActive?: boolean
+    items?: {
+      title: string
+      url: string
+    }[]
+  }[]
 
 interface Props {
   userName?: string;
   logo?: string;
   orgName?: string;
   role?: string;
+  menuItems?: MenuItemsType;
 }
   
-export const TenantSidebar = memo(({logo, orgName, role} : Props ) => {
+export const AdminSidebar = memo(({logo, orgName, role, menuItems} : Props ) => {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname()
 
@@ -44,11 +59,11 @@ export const TenantSidebar = memo(({logo, orgName, role} : Props ) => {
               <Link prefetch={false} href="/">
                 <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <LayoutDashboard className="h-5 w-5" />
-                  {logo && <Image src={logo} alt={`${orgName} logo`} width={32} height={32} />}
+                  {logo && <Image src='/globe.svg' alt={`${orgName} logo`} width={32} height={32} />}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{orgName}</span>
-                  <span className="truncate text-xs">{role === "member" ? "Staff" : "Admin"} Panel</span>
+                  <span className="truncate font-semibold">{config.appDetails.name}</span>
+                  <span className="truncate text-xs">{role === "member" ? "Staff" : "Super Admin"} Panel</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -57,7 +72,7 @@ export const TenantSidebar = memo(({logo, orgName, role} : Props ) => {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={SIDEBAR_MENU_ITEMS.TENANTS_MENU} pathname={pathname} />
+        <NavMain items={SIDEBAR_MENU_ITEMS.ADMIN_MENU} pathname={pathname} />
       </SidebarContent>
 
       <SidebarFooter>
@@ -85,4 +100,4 @@ export const TenantSidebar = memo(({logo, orgName, role} : Props ) => {
   );
 });
 
-TenantSidebar.displayName = 'TenantSidebar';
+AdminSidebar.displayName = 'AdminSidebar';

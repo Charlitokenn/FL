@@ -5,6 +5,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { TenantContextProvider } from "@/lib/context-provider";
+import { SIDEBAR_MENU_ITEMS } from "@/lib/constants";
 
 export default async function TenantLayout({
     children, params
@@ -22,6 +23,7 @@ export default async function TenantLayout({
                 logo={sessionClaims?.orgLogo}
                 orgName={sessionClaims?.orgName}
                 role={sessionClaims?.o?.rol}
+                menuItems={SIDEBAR_MENU_ITEMS}
             />
             <SidebarInset>
                 <header className="flex h-12 shrink-0 items-center gap-2 border-b sticky top-0 z-50 bg-background">

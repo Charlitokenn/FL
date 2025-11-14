@@ -1,4 +1,3 @@
-import { TenantSidebar } from "@/components/ui/tenant-sidebar";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -6,7 +5,7 @@ import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { TenantContextProvider } from "../../lib/context-provider";
 import config from "@/lib/config/app-config";
-import { SIDEBAR_MENU_ITEMS } from "@/lib/constants";
+import { AdminSidebar } from "@/components/ui/admin-sidebar";
 
 export default async function TenantLayout({
     children, params
@@ -20,12 +19,11 @@ export default async function TenantLayout({
 
     return (
         <SidebarProvider>
-            <TenantSidebar
+            <AdminSidebar
                 userName={sessionClaims?.firstName}
                 logo={sessionClaims?.orgLogo}
                 orgName={sessionClaims?.orgName}
                 role={sessionClaims?.o?.rol}
-                menuItems={SIDEBAR_MENU_ITEMS}
             />
             <SidebarInset>
                 <header className="flex h-12 shrink-0 items-center gap-2 border-b sticky top-0 z-50 bg-background">
