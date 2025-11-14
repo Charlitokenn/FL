@@ -29,32 +29,6 @@ export default async function TenantLayout({
                 <header className="flex h-12 shrink-0 items-center gap-2 border-b sticky top-0 z-50 bg-background">
                     <div className="flex flex-1 items-center gap-2 px-8">
                         <SidebarTrigger className="-ms-4" />
-                        <Separator
-                            orientation="vertical"
-                            className="mr-2 data-[orientation=vertical]:h-4"
-                        />
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        {/* {(() => {
-                                            const matchedIcon = iconArray.find((item) =>
-                                                pathname.startsWith(item.url)
-                                            );
-                                            if (matchedIcon && matchedIcon.icon) {
-                                                return <IconRenderer name={matchedIcon.icon}/>
-                                            }
-                                            return null;
-                                            })()} */}
-                                        <span className="sr-only">Dashboard</span>
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem>
-                                    {/* <BreadcrumbPage>{toProperCase(path)}</BreadcrumbPage> */}
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
                     </div>
                     <div className="flex gap-3 ml-auto px-6">
                         {isAdmin && <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl={`${sessionClaims.o.slg}.${localhost}`} />}
