@@ -2,12 +2,13 @@
 
 import { db } from "@/database/drizzle";
 import { contacts } from "@/database/schema";
-import type { InferSelectModel } from 'drizzle-orm';
 
-type Contact = InferSelectModel<typeof contacts>;
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const GetAllContacts = async () => {
     try {
+        await delay(1000); // 1 second delay
+        
         const results = await db.select().from(contacts);
         return { success: true, data: results };
     } catch (error) {
