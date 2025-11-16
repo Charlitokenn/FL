@@ -60,10 +60,6 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center justify-center font-medium text-sm">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </div>
         <div className="flex items-center space-x-2">
           <Button
             aria-label="Go to first page"
@@ -85,6 +81,10 @@ export function DataTablePagination<TData>({
           >
             <ChevronLeft />
           </Button>
+          <div className="flex items-center justify-center font-medium text-sm">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </div>          
           <Button
             aria-label="Go to next page"
             variant="outline"
