@@ -1,5 +1,5 @@
 import PageHero from "@/components/ui/pageHero";
-import { GetAllContacts } from "@/lib/actions/contacts/contacts.actions";
+import { GetAllContacts } from "@/lib/actions/tenants/contacts.actions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   },
 };
 
-const ContactsPage = async ({ sessionClaims }:{ sessionClaims: any}) => {
+const ContactsPage = async ({ sessionClaims }: { sessionClaims: any }) => {
   const { success, data, error } = await GetAllContacts();
 
   if (success) {
-      console.log({data});
+    console.log({ data });
   } else {
-      console.error(error);
+    console.error(error);
   }
 
   return (

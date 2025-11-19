@@ -28,11 +28,21 @@ export const ReusableDataTable = ({ data, columns, pageCount }: Props) =>{
     )
 }
 
+export const ReusableAdvancedDataTable = ({ data, columns, pageCount }: Props) =>{
+    const { table } = useDataTable({
+        data,
+        columns,
+        pageCount
+    });
+    return (
+        <DataTable table={table}>
+            <DataTableAdvancedToolbar table={table}>
+                <DataTableFilterList table={table} />
+                <DataTableSortList table={table} />
+            </DataTableAdvancedToolbar>
+        </DataTable>
+    )
+}
 
 
-{/* <DataTable table={table}>
-  <DataTableAdvancedToolbar table={table}>
-    <DataTableFilterList table={table} />
-    <DataTableSortList table={table} />
-  </DataTableAdvancedToolbar>
-</DataTable> */}
+

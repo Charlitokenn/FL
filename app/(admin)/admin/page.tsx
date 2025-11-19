@@ -1,6 +1,5 @@
 import { CreateTenantForm } from '@/components/admin/create-tenant-form';
 import { AddUserForm } from '@/components/admin/add-user-form';
-import { listAllTenants } from '@/app/actions/tenant-actions';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { CreateOrganization, OrganizationList, OrganizationSwitcher, SignOutButton } from '@clerk/nextjs';
@@ -8,8 +7,6 @@ import { auth } from '@clerk/nextjs/server';
 import PageHero from '@/components/ui/pageHero';
 
 export default async function AdminPage() {
-  const result = await listAllTenants();
-  const tenants = result.tenants || [];
 
   const { userId, sessionClaims, redirectToSignIn } = await auth();
 
