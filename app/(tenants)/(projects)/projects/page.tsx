@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const ProjectsPage = async () => {
   const { data } = await GetAllProjects();
-  console.log(data)
+
     const columns = [
     {
       id: "project_name",
