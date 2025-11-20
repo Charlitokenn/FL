@@ -52,7 +52,7 @@ interface UseDataTableProps<TData>
       | "manualPagination"
       | "manualSorting"
     >,
-    Required<Pick<TableOptions<TData>, "pageCount">> {
+    Partial<Pick<TableOptions<TData>, "pageCount">> {
   initialState?: Omit<Partial<TableState>, "sorting"> & {
     sorting?: ExtendedColumnSort<TData>[];
   };
@@ -65,12 +65,14 @@ interface UseDataTableProps<TData>
   scroll?: boolean;
   shallow?: boolean;
   startTransition?: React.TransitionStartFunction;
+  // Add option to choose between manual and automatic pagination
+  manualPagination?: boolean;
 }
 
 export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   const {
     columns,
-    pageCount = -1,
+    pageCount,
     initialState,
     queryKeys,
     history = "replace",
@@ -81,6 +83,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     scroll = false,
     shallow = true,
     startTransition,
+    manualPagination = false, // Default to automatic pagination
     ...tableProps
   } = props;
   const pageKey = queryKeys?.page ?? PAGE_KEY;
@@ -271,7 +274,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     ...tableProps,
     columns,
     initialState,
-    pageCount,
+    // Only pass pageCount if using manual pagination
+    ...(manualPagination && pageCount !== undefined ? { pageCount } : {}),
     state: {
       pagination,
       sorting,
@@ -296,7 +300,8 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    manualPagination: false,
+    // Use the prop value for manual pagination
+    manualPagination: manualPagination,
     manualSorting: true,
     manualFiltering: true,
     meta: {

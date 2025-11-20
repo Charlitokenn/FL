@@ -2,8 +2,14 @@
  
 import { type Column, type ColumnDef } from "@tanstack/react-table";
 import {
+    Download,
+  DownloadIcon,
   MoreHorizontal,
   Text,
+  Trash,
+  Trash2,
+  Trash2Icon,
+  XIcon,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -22,6 +28,9 @@ import { useDataTable } from "@/hooks/use-data-table";
 import { formatDate } from "@/lib/format";
 import { currencyNumber, timestampToDateString } from "@/lib/utils";
 import { DataTableActionBar } from "@/components/data-table/data-table-action-bar";
+import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
   
 export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     const [projectName] = useQueryState("projectName", parseAsString.withDefault(""));
@@ -196,42 +205,159 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     ],
     [],
   );
-
-  // Temporary pageSize for initial calculation
-  const initialPageSize = 5;  
  
   const { table } = useDataTable({
     data: filteredData,
     columns,
-    pageCount: 1, // Will be updated below
-    rowCount: filteredData.length,
     initialState: {
       sorting: [{ id: "acquisitionDate", desc: false }],
       columnPinning: { right: ["actions"] },
       pagination: {
-        pageSize: initialPageSize,
+        pageSize: 6,
         pageIndex: 0,
       },
     },
     getRowId: (row) => row.id,
   });
 
-  // Now that table is defined, calculate pageCount and update table.options.pageCount if needed
-  const pageIndex = table.getState().pagination.pageIndex;
-  const pageSize = table.getState().pagination.pageSize;
-  const pageCount = Math.ceil(filteredData.length / (pageSize || initialPageSize));
-  if (table.options.pageCount !== pageCount) {
-    table.options.pageCount = pageCount;
-  }  
- 
+  const selectedRowsCount = table.getFilteredSelectedRowModel().rows.length
+
+  // CSV Download Handler
+  const handleDownloadCSV = React.useCallback(() => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    
+    if (selectedRows.length === 0) return;
+
+    const projects = selectedRows.map(row => row.original);
+    
+    // Get all keys from the first project to use as headers
+    const headers = Object.keys(projects[0]);
+    
+    // Convert rows to CSV format
+    const csvRows = projects.map(project => {
+      return headers.map(header => {
+        const value = project[header as keyof Project];
+        
+        // Handle different data types
+        if (value === null || value === undefined) {
+          return '';
+        }
+        
+        // Format dates if the field contains 'date' or 'Date'
+        if (header.toLowerCase().includes('date') && typeof value === 'string') {
+          return `"${formatDate(value)}"`;
+        }
+        
+        // Escape and quote string values
+        if (typeof value === 'string') {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        
+        // Return numbers and booleans as-is
+        return value;
+      }).join(",");
+    });
+
+    // Combine headers and rows
+    const csvContent = [headers.join(","), ...csvRows].join("\n");
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", `projects_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = "hidden";
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    URL.revokeObjectURL(url);
+  }, [table]);
+
+  // Delete Handler
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  
+//   const handleDelete = React.useCallback(async () => {
+//     if (!onDelete) return;
+    
+//     const selectedRows = table.getFilteredSelectedRowModel().rows;
+//     const selectedIds = selectedRows.map(row => row.original.id);
+    
+//     if (selectedIds.length === 0) return;
+
+//     // Optional: Add confirmation dialog
+//     if (!confirm(`Are you sure you want to delete ${selectedIds.length} project(s)?`)) {
+//       return;
+//     }
+
+//     setIsDeleting(true);
+    
+//     try {
+//       await onDelete(selectedIds);
+      
+//       // Clear selection after successful delete
+//       table.resetRowSelection();
+//     } catch (error) {
+//       console.error("Error deleting projects:", error);
+//       // Optional: Add error toast notification here
+//     } finally {
+//       setIsDeleting(false);
+//     }
+//   }, [table, onDelete]);  
+  
   return (
     <div className="data-table-container">
       <DataTable
         table={table}
         actionBar={
-            <DataTableActionBar table={table}>
-            {/* Add your custom actions here */}
-            {/* //TODO - Add action to download selected records in csv */}
+            <DataTableActionBar table={table} className="flex">
+                 <Badge variant="outline" className="gap-0 rounded-md px-2 py-1">
+                    {selectedRowsCount} Selected                                 
+                    <button
+                        className="-my-[5px] -ms-0.5 -me-2 inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[inherit] p-0 text-foreground/60 transition-[color,box-shadow] outline-none hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        aria-label="Delete"
+                    >
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <XIcon size={14} aria-hidden="true" onClick={() => table.resetRowSelection()} />
+                        </TooltipTrigger>
+                        <TooltipContent className="px-2 py-1.5 text-xs">
+                            <p>Clear selection</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    </button>
+                </Badge>
+                <Separator orientation="vertical"/>                                 
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <DownloadIcon onClick={handleDownloadCSV} className="text-gray-700 size-5 rounded p-0.3 cursor-pointer"/>
+                    </TooltipTrigger>
+                    <TooltipContent className="px-2 py-1.5 text-xs">
+                        <p>Export {selectedRowsCount} Selected Projects</p>
+                    </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Trash2Icon className="text-red-700 size-5 rounded p-0.3 cursor-pointer"/>
+                    </TooltipTrigger>
+                    <TooltipContent className="px-2 py-1.5 text-xs">
+                        <p>Delete {selectedRowsCount} Selected Projects</p>
+                    </TooltipContent>
+                </Tooltip>
+              {/* {onDelete && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDelete}
+                  disabled={table.getFilteredSelectedRowModel().rows.length === 0 || isDeleting}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {isDeleting ? "Deleting..." : `Delete (${table.getFilteredSelectedRowModel().rows.length})`}
+                </Button>
+              )} */}
             </DataTableActionBar>
         }        
         >
