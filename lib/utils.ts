@@ -125,3 +125,8 @@ export function timeUntil(targetDate: string | Date): string {
     }`
     : `${diffDays} day${diffDays === 1 ? "" : "s"}`;
 }
+
+export const timestampToDateString = (timestamp: string): string => {
+  const date = new Date(parseInt(timestamp));
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+};

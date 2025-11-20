@@ -1,20 +1,15 @@
 "use client";
  
-import type { Column, ColumnDef } from "@tanstack/react-table";
+import { type Column, type ColumnDef } from "@tanstack/react-table";
 import {
-  CheckCircle,
-  CheckCircle2,
-  DollarSign,
   MoreHorizontal,
   Text,
-  XCircle,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -25,25 +20,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDataTable } from "@/hooks/use-data-table";
 import { formatDate } from "@/lib/format";
-import { useDebounce } from "use-debounce";
-import { db } from "@/database/drizzle";
-import { projects } from "@/database/schema";
-import { desc } from "drizzle-orm";
-import { GetAllProjects, GetPaginatedProjects } from "@/lib/actions/tenants/projects.actions";
-import { currencyNumber } from "@/lib/utils";
+import { currencyNumber, timestampToDateString } from "@/lib/utils";
 import { DataTableActionBar } from "@/components/data-table/data-table-action-bar";
-import NotFound from "@/app/not-found";
-import { toast } from "sonner";
   
 export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     const [projectName] = useQueryState("projectName", parseAsString.withDefault(""));
     const [acquisitionDate] = useQueryState("acquisitionDate", parseAsArrayOf(parseAsString).withDefault([]));
-
-    // Helper function to convert timestamp to YYYY-MM-DD (moved outside useMemo)
-    const timestampToDateString = (timestamp: string): string => {
-        const date = new Date(parseInt(timestamp));
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    };
+    const [acquisitionValue] = useQueryState("acquisitionValue", parseAsArrayOf(parseAsString).withDefault([]));
 
     const filteredData = React.useMemo<Project[]>(() => {
         if (!data) return [];
@@ -53,8 +36,14 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
         const hasDateFilter = dateStrings.length > 0;
         const isDateRange = dateStrings.length === 2;
         
-        // Sort for range comparison if needed
+        // Pre-process acquisition value filter (convert query strings to numbers)
+        const hasValueFilter = acquisitionValue.length > 0;
+        const isValueRange = acquisitionValue.length === 2;
+        const valueNumbers = acquisitionValue.map(v => parseFloat(v));
+        
+        // Sort for range comparisons if needed
         if (isDateRange) dateStrings.sort();
+        if (isValueRange) valueNumbers.sort((a, b) => a - b);
         
         return data.filter((project: Project) => {
             // Project name filter
@@ -68,14 +57,31 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
                 if (!projectDate) return false;
                 
                 if (isDateRange) {
-                    return projectDate >= dateStrings[0] && projectDate <= dateStrings[1];
+                    if (!(projectDate >= dateStrings[0] && projectDate <= dateStrings[1])) {
+                        return false;
+                    }
+                } else if (!dateStrings.includes(projectDate)) {
+                    return false;
                 }
-                return dateStrings.includes(projectDate);
+            }
+            
+            // Acquisition value filter
+            if (hasValueFilter) {
+                const projectValue = project?.acquisitionValue;
+                if (projectValue == null) return false;
+                
+                if (isValueRange) {
+                    if (!(projectValue >= valueNumbers[0] && projectValue <= valueNumbers[1])) {
+                        return false;
+                    }
+                } else if (!valueNumbers.includes(projectValue)) {
+                    return false;
+                }
             }
             
             return true;
         });
-    }, [projectName, acquisitionDate, data]);
+    }, [projectName, acquisitionDate, acquisitionValue, data]);
 
   const columns = React.useMemo<ColumnDef<Project>[]>(
     () => [
@@ -192,12 +198,13 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
   );
 
   // Temporary pageSize for initial calculation
-  const initialPageSize = 7;  
+  const initialPageSize = 5;  
  
   const { table } = useDataTable({
     data: filteredData,
     columns,
     pageCount: 1, // Will be updated below
+    rowCount: filteredData.length,
     initialState: {
       sorting: [{ id: "acquisitionDate", desc: false }],
       columnPinning: { right: ["actions"] },
@@ -210,12 +217,12 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
   });
 
   // Now that table is defined, calculate pageCount and update table.options.pageCount if needed
-//   const pageIndex = table.getState().pagination.pageIndex;
-//   const pageSize = table.getState().pagination.pageSize;
-//   const pageCount = Math.ceil(totalRows / (pageSize || initialPageSize));
-//   if (table.options.pageCount !== pageCount) {
-//     table.options.pageCount = pageCount;
-//   }  
+  const pageIndex = table.getState().pagination.pageIndex;
+  const pageSize = table.getState().pagination.pageSize;
+  const pageCount = Math.ceil(filteredData.length / (pageSize || initialPageSize));
+  if (table.options.pageCount !== pageCount) {
+    table.options.pageCount = pageCount;
+  }  
  
   return (
     <div className="data-table-container">
@@ -226,9 +233,9 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
             {/* Add your custom actions here */}
             {/* //TODO - Add action to download selected records in csv */}
             </DataTableActionBar>
-        }
+        }        
         >
-        <DataTableToolbar table={table} />
+            <DataTableToolbar table={table} />
       </DataTable>
     </div>
   );

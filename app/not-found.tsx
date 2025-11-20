@@ -18,7 +18,7 @@ export default function NotFound() {
     }, [pathname]);
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-blue-50 to-white p-4">
             <div className="text-center">
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900">
                     {subdomain ? (
