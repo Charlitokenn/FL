@@ -31,8 +31,13 @@ import { DataTableActionBar } from "@/components/data-table/data-table-action-ba
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/toast-context";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import ReusableTooltip from "@/components/reusable-tooltip";
+import ReusableAlertDialog from "@/components/reusable-alert-dialog";
   
 export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
+    const { showToast } = useToast()
     const [projectName] = useQueryState("projectName", parseAsString.withDefault(""));
     const [acquisitionDate] = useQueryState("acquisitionDate", parseAsArrayOf(parseAsString).withDefault([]));
     const [acquisitionValue] = useQueryState("acquisitionValue", parseAsArrayOf(parseAsString).withDefault([]));
@@ -280,33 +285,37 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
   // Delete Handler
   const [isDeleting, setIsDeleting] = React.useState(false);
   
-//   const handleDelete = React.useCallback(async () => {
-//     if (!onDelete) return;
+  const handleDelete = React.useCallback(async () => {   
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    const selectedIds = selectedRows.map(row => row.original.id);
     
-//     const selectedRows = table.getFilteredSelectedRowModel().rows;
-//     const selectedIds = selectedRows.map(row => row.original.id);
-    
-//     if (selectedIds.length === 0) return;
+    if (selectedIds.length === 0) return;
 
-//     // Optional: Add confirmation dialog
-//     if (!confirm(`Are you sure you want to delete ${selectedIds.length} project(s)?`)) {
-//       return;
-//     }
-
-//     setIsDeleting(true);
+    setIsDeleting(true);
     
-//     try {
-//       await onDelete(selectedIds);
-      
-//       // Clear selection after successful delete
-//       table.resetRowSelection();
-//     } catch (error) {
-//       console.error("Error deleting projects:", error);
-//       // Optional: Add error toast notification here
-//     } finally {
-//       setIsDeleting(false);
-//     }
-//   }, [table, onDelete]);  
+    try {
+        //   await onDelete(selectedIds);
+      showToast({
+        title: "Delete Successful",
+        description: `${selectedIds.length} Projects have been deleted`,
+        variant: "success",
+        showAction: false
+      })       
+      // Clear selection after successful delete
+      table.resetRowSelection();
+    } catch (error) {
+        console.error("Error deleting projects:", error);
+
+        showToast({
+            title: "Error Deleting Projects",
+            description: `${error} `,
+            variant: "error",
+            showAction: false
+        }) 
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [table]);  
   
   return (
     <div className="data-table-container">
@@ -314,50 +323,36 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
         table={table}
         actionBar={
             <DataTableActionBar table={table} className="flex">
-                 <Badge variant="outline" className="gap-0 rounded-md px-2 py-1">
+                <Badge variant="outline" className="gap-0 rounded-md px-2 py-1">
                     {selectedRowsCount} Selected                                 
                     <button
                         className="-my-[5px] -ms-0.5 -me-2 inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[inherit] p-0 text-foreground/60 transition-[color,box-shadow] outline-none hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                         aria-label="Delete"
                     >
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <XIcon size={14} aria-hidden="true" onClick={() => table.resetRowSelection()} />
-                        </TooltipTrigger>
-                        <TooltipContent className="px-2 py-1.5 text-xs">
-                            <p>Clear selection</p>
-                        </TooltipContent>
-                    </Tooltip>
+                        <ReusableTooltip
+                            trigger={<XIcon size={14} aria-hidden="true" onClick={() => table.resetRowSelection()} />}
+                            tooltip="Clear selection"
+                        />
                     </button>
                 </Badge>
-                <Separator orientation="vertical"/>                                 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <DownloadIcon onClick={handleDownloadCSV} className="text-gray-700 size-5 rounded p-0.3 cursor-pointer"/>
-                    </TooltipTrigger>
-                    <TooltipContent className="px-2 py-1.5 text-xs">
-                        <p>Export {selectedRowsCount} Selected Projects</p>
-                    </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Trash2Icon className="text-red-700 size-5 rounded p-0.3 cursor-pointer"/>
-                    </TooltipTrigger>
-                    <TooltipContent className="px-2 py-1.5 text-xs">
-                        <p>Delete {selectedRowsCount} Selected Projects</p>
-                    </TooltipContent>
-                </Tooltip>
-              {/* {onDelete && (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handleDelete}
-                  disabled={table.getFilteredSelectedRowModel().rows.length === 0 || isDeleting}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {isDeleting ? "Deleting..." : `Delete (${table.getFilteredSelectedRowModel().rows.length})`}
-                </Button>
-              )} */}
+                <Separator orientation="vertical"/>  
+                <ReusableTooltip
+                    trigger={<DownloadIcon onClick={handleDownloadCSV} className="text-gray-700 size-5 rounded p-0.3 cursor-pointer"/>}
+                    tooltip={`Export ${selectedRowsCount} Selected Projects`}
+                />
+                <ReusableTooltip 
+                    trigger={   <ReusableAlertDialog 
+                                    trigger={<Trash2Icon className="text-red-700 size-5 rounded p-0.3 cursor-pointer"/>} 
+                                    title="Are you absolutely sure?"
+                                    description={`This action cannot be undone. This will permanently delete ${selectedRowsCount} projects`}
+                                    cancelText="Cancel" 
+                                    submit={handleDelete}
+                                    submitClasses="bg-red-700"
+                                    submitText="Continue"
+                                />
+                            }
+                    tooltip={`Delete ${selectedRowsCount} Selected Projects`}                    
+                />
             </DataTableActionBar>
         }        
         >
