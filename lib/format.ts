@@ -6,12 +6,12 @@ export function formatDate(
 
   try {
     return new Intl.DateTimeFormat("en-US", {
-      month: opts.month ?? "long",
+      month: opts.month ?? "short",
       day: opts.day ?? "numeric",
       year: opts.year ?? "numeric",
       ...opts,
     }).format(new Date(date));
-  } catch (_err) {
+  } catch {
     return "";
   }
 }

@@ -4,7 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "next-themes";
-import { Toaster } from "sonner";
+import { ToastContextProvider } from "@/components/toast-context";
+import config from "@/lib/config/app-config";
 
 const ubuntuSans = Ubuntu_Sans({
   variable: "--font-ubuntu-sans",
@@ -16,7 +17,35 @@ export const metadata: Metadata = {
     template: "%s | FlowLedger",
     default: "FlowLedger",
   },
-  description: "The Official FlowLedger",
+  description: config.appDetails.description,
+  keywords: [
+    "realestate system",
+  ],
+  authors: [
+    {
+      name: config.appDetails.authorName,
+      url: config.appDetails.authorUrl,
+    },
+  ],
+  creator: config.appDetails.creatorName,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: config.appDetails.openGraph.url,
+    title: config.appDetails.openGraph.title,
+    description: config.appDetails.openGraph.description,
+    siteName: config.appDetails.openGraph.siteName,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: config.appDetails.twitter.title,
+    description: config.appDetails.twitter.description,
+    images: config.appDetails.twitter.images,
+    creator: config.appDetails.twitter.creator,
+  },
+  icons: {
+    icon: config.appDetails.icon.icon
+  },
 };
 
 export default function RootLayout({
@@ -36,8 +65,9 @@ export default function RootLayout({
         <body className={`${ubuntuSans.variable} antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
             <NuqsAdapter>
-              {children}
-              <Toaster position="top-right" className="top-18! right-6!" />
+              <ToastContextProvider>
+                {children}
+              </ToastContextProvider>              
             </NuqsAdapter>
           </ThemeProvider>
         </body>

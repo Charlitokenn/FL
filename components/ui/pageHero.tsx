@@ -3,9 +3,7 @@
 import { useTenantContext } from "@/lib/context-provider";
 import { Button } from "./button";
 import { Plus } from "lucide-react";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
-import { Label } from "@radix-ui/react-select";
-import { Input } from "./input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
 
 type PageHeroProps = {
   title?: string;
@@ -26,7 +24,7 @@ const PageHero = ({
   showButton,
   dialog,
   dialogTitle,
-  dialogDescription
+  dialogDescription,
 }: PageHeroProps) => {
   const sessionClaims = useTenantContext();
 
@@ -46,13 +44,12 @@ const PageHero = ({
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogDescription>{dialogDescription}</DialogDescription>
+                <DialogDescription className="border-b pb-2">{dialogDescription}</DialogDescription>
               </DialogHeader>
                 {dialog}
             </DialogContent>
         </Dialog>
       }
-      {dialog ? dialog : ""}
     </div>
   );
 };

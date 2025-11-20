@@ -50,7 +50,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(20.463% 0.00002 271.152);
+  --primary: oklch(55.22% 0.00494 16.607);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -71,7 +71,7 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(18.674% 0.00002 271.152);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -123,3 +123,20 @@
   }
 }
 
+@layer utilities {
+.form-title {
+    @apply text-4xl font-bold text-gray-400 mb-10;
+  }
+  .form-label {
+    @apply text-sm font-medium text-gray-400;
+  }
+  .form-input {
+    @apply h-8 px-3 py-3 text-white text-base placeholder:text-gray-500 border-gray-600 bg-gray-800 rounded-lg focus:border-yellow-500! focus:ring-0;
+  }
+  .select-trigger {
+    @apply w-full h-12! px-3 py-3 text-base border-gray-600 bg-gray-800 text-white rounded-lg focus:border-yellow-500! focus:ring-0;
+  }
+  .submit-btn {
+    @apply cursor-pointer px-4 py-2 w-fit flex items-center gap-2 text-sm md:text-base bg-blue-500 hover:bg-blue-600 text-black font-medium rounded;
+  } 
+}

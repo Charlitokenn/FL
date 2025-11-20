@@ -1,5 +1,5 @@
 {
-  "id": "6b163c75-b8fd-4227-9fc1-b7521bae9655",
+  "id": "c4157a42-6ac9-4b4b-955b-eef0cf68d376",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -173,6 +173,197 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.projects": {
+      "name": "projects",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "project_name": {
+          "name": "project_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "project_details": {
+          "name": "project_details",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "acquisition_date": {
+          "name": "acquisition_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sqm_bought": {
+          "name": "sqm_bought",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "acquisition_value": {
+          "name": "acquisition_value",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "region": {
+          "name": "region",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "district": {
+          "name": "district",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ward": {
+          "name": "ward",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "project_owner": {
+          "name": "project_owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "committment_amount": {
+          "name": "committment_amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lga_fee": {
+          "name": "lga_fee",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "street": {
+          "name": "street",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tp_number": {
+          "name": "tp_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tp_status": {
+          "name": "tp_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "survey_status": {
+          "name": "survey_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "survey_number": {
+          "name": "survey_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "original_contract_pdf": {
+          "name": "original_contract_pdf",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "supplier_name": {
+          "name": "supplier_name",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mwenyekiti_name": {
+          "name": "mwenyekiti_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mwenyekiti_mobile": {
+          "name": "mwenyekiti_mobile",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mtendaji_name": {
+          "name": "mtendaji_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mtendaji_mobile": {
+          "name": "mtendaji_mobile",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "number_of_plots": {
+          "name": "number_of_plots",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tp_url": {
+          "name": "tp_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "survey_url": {
+          "name": "survey_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "added_by": {
+          "name": "added_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -231,7 +422,6 @@
         "Mufindi",
         "Biharamulo",
         "Bukoba",
-        "Bukoba",
         "Karagwe",
         "Kyerwa",
         "Missenyi",
@@ -250,7 +440,6 @@
         "Uvinza",
         "Hai",
         "Moshi",
-        "Moshi",
         "Mwanga",
         "Rombo",
         "Same",
@@ -260,7 +449,6 @@
         "Kati",
         "Kusini",
         "Kilwa",
-        "Lindi",
         "Lindi",
         "Liwale",
         "Nachingwea",
@@ -273,7 +461,6 @@
         "Simanjiro",
         "Bunda",
         "Butiama",
-        "Musoma",
         "Musoma",
         "Rorya",
         "Serengeti",
@@ -291,14 +478,12 @@
         "Kilombero",
         "Kilosa",
         "Morogoro",
-        "Morogoro",
         "Mvomero",
         "Ulanga",
         "Malinyi",
         "Ifakara Township",
         "Masasi",
         "Masasi Town",
-        "Mtwara",
         "Mtwara",
         "Nanyumbu",
         "Newala",
@@ -326,9 +511,7 @@
         "Kalambo",
         "Nkasi",
         "Sumbawanga",
-        "Sumbawanga",
         "Mbinga",
-        "Songea",
         "Songea",
         "Tunduru",
         "Namtumbo",
@@ -336,7 +519,6 @@
         "Kahama Town",
         "Kahama",
         "Kishapu",
-        "Shinyanga",
         "Shinyanga",
         "Bariadi",
         "Busega",
@@ -347,7 +529,6 @@
         "Iramba",
         "Manyoni",
         "Mkalama",
-        "Singida",
         "Singida",
         "Ileje",
         "Mbozi",
@@ -420,7 +601,6 @@
         "Simiyu",
         "Singida",
         "Songwe",
-        "Tabora",
         "Tabora",
         "Tanga"
       ]

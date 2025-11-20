@@ -1,7 +1,7 @@
-import { ReusableDataTable } from "@/components/data-table/reusable-data-table";
 import PageHero from "@/components/ui/pageHero";
 import { GetAllProjects } from "@/lib/actions/tenants/projects.actions";
 import { Metadata } from "next";
+import { ProjectsTable } from "./columns"
 
 export const metadata: Metadata = {
   title: {
@@ -11,20 +11,6 @@ export const metadata: Metadata = {
 };
 
 const ProjectsPage = async () => {
-  const { data } = await GetAllProjects();
-
-    const columns = [
-    {
-      id: "project_name",
-      accessorKey: "project_name",
-      header: "Project Name",
-    },
-    {
-      id: "project_details",
-      accessorKey: "project_details",
-      header: "Project Details",
-    },
-  ];
   return (
     <section>
       <PageHero
@@ -34,7 +20,7 @@ const ProjectsPage = async () => {
         showButton
         buttonText="New Project"
       />
-     <ReusableDataTable data={data ?? []} pageCount={10} columns={columns} />
+      <ProjectsTable/>
     </section>
   )
 }

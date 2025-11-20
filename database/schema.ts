@@ -35,7 +35,7 @@ export const REGIONS_ENUM = pgEnum('regions',[
   'Tabora',
   'Tanga'
 ])
-export const DISTRICT_ENUM = pgEnum('districts',[
+export const DISTRICT_ENUM = pgEnum('districts', [
   'Meru',
   'Arusha City',
   'Arusha',
@@ -66,7 +66,6 @@ export const DISTRICT_ENUM = pgEnum('districts',[
   'Mufindi',
   'Biharamulo',
   'Bukoba',
-  'Bukoba',
   'Karagwe',
   'Kyerwa',
   'Missenyi',
@@ -95,7 +94,6 @@ export const DISTRICT_ENUM = pgEnum('districts',[
   'Kusini',
   'Kilwa',
   'Lindi',
-  'Lindi',
   'Liwale',
   'Nachingwea',
   'Ruangwa',
@@ -107,7 +105,6 @@ export const DISTRICT_ENUM = pgEnum('districts',[
   'Simanjiro',
   'Bunda',
   'Butiama',
-  'Musoma',
   'Musoma',
   'Rorya',
   'Serengeti',
@@ -125,14 +122,12 @@ export const DISTRICT_ENUM = pgEnum('districts',[
   'Kilombero',
   'Kilosa',
   'Morogoro',
-  'Morogoro',
   'Mvomero',
   'Ulanga',
   'Malinyi',
   'Ifakara Township',
   'Masasi',
   'Masasi Town',
-  'Mtwara',
   'Mtwara',
   'Nanyumbu',
   'Newala',
@@ -161,7 +156,6 @@ export const DISTRICT_ENUM = pgEnum('districts',[
   'Nkasi',
   'Sumbawanga',
   'Mbinga',
-  'Songea',
   'Songea',
   'Tunduru',
   'Namtumbo',
@@ -201,7 +195,8 @@ export const DISTRICT_ENUM = pgEnum('districts',[
   'Mkinga',
   'Pangani',
   'Tanga City'
-])
+]);
+
 
 export const contacts = pgTable('contacts', { 
   id: uuid('id').primaryKey().defaultRandom(),
@@ -229,7 +224,7 @@ export const contacts = pgTable('contacts', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });
 
-export const project = pgTable('projects', {
+export const projects = pgTable('projects', {
   id: uuid('id').primaryKey().defaultRandom(),
   projectName: text('project_name'),
   projectDetails: text('project_details'),

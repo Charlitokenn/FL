@@ -19,3 +19,19 @@ export const GetAllContacts = async () => {
         };
     }
 }
+
+export const CreateContacts = async (data: ContactFormData[]) => {
+    try {
+        await delay(1000); // 1 second delay
+        const result = await db.insert(contacts).values(data).returning();
+
+        return { success: true, data: result };
+    } catch (error) {
+        console.error("Error creating contact:", error);
+        
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : "Failed to create contact" 
+        };        
+    }
+}
