@@ -11,6 +11,9 @@ export const metadata: Metadata = {
 };
 
 const ProjectsPage = async () => {
+  const results = await GetAllProjects();
+  console.log({results})
+
   return (
     <section>
       <PageHero
@@ -20,7 +23,7 @@ const ProjectsPage = async () => {
         showButton
         buttonText="New Project"
       />
-      <ProjectsTable/>
+      <ProjectsTable data={results.data ?? []}/>
     </section>
   )
 }

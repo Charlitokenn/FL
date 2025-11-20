@@ -21,6 +21,13 @@ export const metadata: Metadata = {
   keywords: [
     "realestate system",
   ],
+  metadataBase: new URL('https://flowledger.com'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+    },
+  },  
   authors: [
     {
       name: config.appDetails.authorName,

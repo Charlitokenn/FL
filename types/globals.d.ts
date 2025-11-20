@@ -85,7 +85,7 @@ declare global {
     id: string;
     projectName: string
     projectDetails: string | null;
-    acquisitionDate: Date
+    acquisitionDate: string
     sqmBought: number
     acquisitionValue: number
     region: string | null;

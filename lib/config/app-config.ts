@@ -2,7 +2,7 @@ const config = {
     appDetails: {
         name: "Flow Ledger",
         supportEmail: "hello@flowledger.com",
-        description: "The Official Flow Ledger App",
+        description: "#1 Real Estate Management Software",
         authorName: "Charles Nkonoki",
         authorUrl: "https://flowledger.com",
         creatorName: "Charles Nkonoki",
@@ -13,11 +13,10 @@ const config = {
             siteName: "Flow Ledger",            
         },
         twitter: {
-            card: "summary_large_image",
             title: "Flow Ledger",
             description: "#1 Real Estate Management Software",
             images: [`/og.jpg`],
-            creator: "@charles-nkonoki",            
+            creator: "@flowledger",            
         },
         icon: {
             icon: "/icon.png",

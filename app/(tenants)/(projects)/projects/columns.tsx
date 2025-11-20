@@ -29,16 +29,53 @@ import { useDebounce } from "use-debounce";
 import { db } from "@/database/drizzle";
 import { projects } from "@/database/schema";
 import { desc } from "drizzle-orm";
-import { GetPaginatedProjects } from "@/lib/actions/tenants/projects.actions";
+import { GetAllProjects, GetPaginatedProjects } from "@/lib/actions/tenants/projects.actions";
 import { currencyNumber } from "@/lib/utils";
+import { DataTableActionBar } from "@/components/data-table/data-table-action-bar";
+import NotFound from "@/app/not-found";
+import { toast } from "sonner";
   
-export function ProjectsTable() {
-  const [data, setData] = React.useState<Project[]>([]);
-  const [totalRows, setTotalRows] = React.useState(0);
+export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
+    const [projectName] = useQueryState("projectName", parseAsString.withDefault(""));
+    const [acquisitionDate] = useQueryState("acquisitionDate", parseAsArrayOf(parseAsString).withDefault([]));
 
-  // Debounce the filter value (wait 300ms after user stops typing)
-  const [project] = useQueryState("projectName", parseAsString.withDefault(""));
-  const [debouncedProjectName] = useDebounce(project, 300);    
+    // Helper function to convert timestamp to YYYY-MM-DD (moved outside useMemo)
+    const timestampToDateString = (timestamp: string): string => {
+        const date = new Date(parseInt(timestamp));
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    };
+
+    const filteredData = React.useMemo<Project[]>(() => {
+        if (!data) return [];
+        
+        // Pre-convert all acquisition date timestamps once
+        const dateStrings = acquisitionDate.map(timestampToDateString);
+        const hasDateFilter = dateStrings.length > 0;
+        const isDateRange = dateStrings.length === 2;
+        
+        // Sort for range comparison if needed
+        if (isDateRange) dateStrings.sort();
+        
+        return data.filter((project: Project) => {
+            // Project name filter
+            if (projectName && !project?.projectName.toLowerCase().includes(projectName.toLowerCase())) {
+                return false;
+            }
+            
+            // Date filter
+            if (hasDateFilter) {
+                const projectDate = project?.acquisitionDate;
+                if (!projectDate) return false;
+                
+                if (isDateRange) {
+                    return projectDate >= dateStrings[0] && projectDate <= dateStrings[1];
+                }
+                return dateStrings.includes(projectDate);
+            }
+            
+            return true;
+        });
+    }, [projectName, acquisitionDate, data]);
 
   const columns = React.useMemo<ColumnDef<Project>[]>(
     () => [
@@ -96,7 +133,7 @@ export function ProjectsTable() {
         meta: {
           label: "Project Name",
           placeholder: "Search Project...",
-          variant: "multiSelect",
+          variant: "text",
           icon: Text,
           searchable: true,
         },
@@ -155,10 +192,10 @@ export function ProjectsTable() {
   );
 
   // Temporary pageSize for initial calculation
-  const initialPageSize = 10;  
+  const initialPageSize = 7;  
  
   const { table } = useDataTable({
-    data,
+    data: filteredData,
     columns,
     pageCount: 1, // Will be updated below
     initialState: {
@@ -173,32 +210,24 @@ export function ProjectsTable() {
   });
 
   // Now that table is defined, calculate pageCount and update table.options.pageCount if needed
-  const pageIndex = table.getState().pagination.pageIndex;
-  const pageSize = table.getState().pagination.pageSize;
-  const pageCount = Math.ceil(totalRows / (pageSize || initialPageSize));
-  if (table.options.pageCount !== pageCount) {
-    table.options.pageCount = pageCount;
-  }  
-
-  // Fetch paginated data from Neon Database
-  React.useEffect(() => {    
-    const fetchPage = async (page = 1, pageSize = 10) => {
-      const {data, error} = await GetPaginatedProjects(page, pageSize)
-        console.log({data})
-      if (error) {
-        console.error("Database fetch error:", error);
-      } else {
-        setData(data);
-        setTotalRows(count || 0);
-      }
-    };
-    fetchPage();
-  }, [debouncedProjectName, pageIndex, pageSize]);
-
+//   const pageIndex = table.getState().pagination.pageIndex;
+//   const pageSize = table.getState().pagination.pageSize;
+//   const pageCount = Math.ceil(totalRows / (pageSize || initialPageSize));
+//   if (table.options.pageCount !== pageCount) {
+//     table.options.pageCount = pageCount;
+//   }  
  
   return (
     <div className="data-table-container">
-      <DataTable table={table}>
+      <DataTable
+        table={table}
+        actionBar={
+            <DataTableActionBar table={table}>
+            {/* Add your custom actions here */}
+            {/* //TODO - Add action to download selected records in csv */}
+            </DataTableActionBar>
+        }
+        >
         <DataTableToolbar table={table} />
       </DataTable>
     </div>
