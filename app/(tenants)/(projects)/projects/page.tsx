@@ -21,9 +21,10 @@ const ProjectsPage = async () => {
         title="Projects"
         subtitle={`Here you can manage all your projects `}
         showButton
-        buttonText="New Project"
-        dialogTitle="New Project"
-        dialog={<p>Am the content</p>}
+        buttonText="New Project"        
+        sheetTitle="New project"
+        sheetContent={<p>I am Content</p>}
+        sheetSaveButtonText="Save Project"
       />
       <ProjectsTable data={results.data ?? []}/>
     </section>

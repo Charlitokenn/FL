@@ -3,8 +3,7 @@
 import { useTenantContext } from "@/lib/context-provider";
 import { Button } from "./button";
 import { Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
-import ReusableDialog from "../reusable-dialog";
+import ReusableSheet from "../reusable-sheet";
 
 type PageHeroProps = {
   title?: string;
@@ -12,9 +11,13 @@ type PageHeroProps = {
   type: "greeting" | "hero";
   buttonText?: string;
   showButton?: boolean;
-  dialog?: React.ReactNode; // Accepts JSX
-  dialogTitle: string;
-  dialogDescription?: string;
+  sheetContent: React.ReactNode
+  sheetTitle: string
+  sheetDescription?: string 
+  sheetIcon?: React.ReactNode
+  sheetSaveButtonText?: string
+  hideSheetFooter?: boolean
+  sheetSizeClass?: string
 };
 
 const PageHero = ({
@@ -23,9 +26,13 @@ const PageHero = ({
   type,
   buttonText,
   showButton,
-  dialog,
-  dialogTitle,
-  dialogDescription,
+  sheetContent,
+  sheetTitle,
+  sheetDescription,
+  sheetIcon,
+  sheetSaveButtonText,
+  hideSheetFooter,
+  sheetSizeClass
 }: PageHeroProps) => {
   const sessionClaims = useTenantContext();
 //TODO - ADD a bulk add functionality
@@ -37,12 +44,16 @@ const PageHero = ({
         </h1>
         <p className="text-sm text-muted-foreground">{subtitle}</p>
       </div>
-      {showButton && 
-        <ReusableDialog 
-          trigger={<Button className="cursor-pointer"><Plus/>{buttonText}</Button>} 
-          title={dialogTitle} 
-          description={dialogDescription}
-          dialog={dialog}     
+      {showButton &&
+        <ReusableSheet 
+          trigger={<div className="cursor-pointer flex flex-row p-1 pe-2 bg-primary rounded-lg border text-sm items-center "><Plus className="size-5"/>{buttonText}</div>} 
+          title={sheetTitle}
+          description={sheetDescription}
+          titleIcon={sheetIcon}
+          formContent={sheetContent}
+          saveButtonText={sheetSaveButtonText}
+          hideFooter={hideSheetFooter}
+          popupClass={sheetSizeClass}  
         />
       }
     </div>

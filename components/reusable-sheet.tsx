@@ -23,17 +23,18 @@ interface Props {
    saveButtonText?: string;
    titleIcon?: React.ReactNode;
    hideFooter?: boolean;
+   popupClass?: string;
 }
 
 export default function ReusableSheet({ 
-    trigger, title, description, formContent, isInset = true, saveButtonText,titleIcon, hideFooter
+    trigger, title, description, formContent, isInset = true, saveButtonText,titleIcon, hideFooter, popupClass
  }: Props) {
   return (
     <Sheet>
       <SheetTrigger  render={<button />}>
         {trigger}
       </SheetTrigger>
-      <SheetPopup inset={isInset}>
+      <SheetPopup inset={isInset} className={popupClass}>
           <SheetHeader>
             <SheetTitle className="flex gap-2 items-center">
                 <div className="">{titleIcon}</div>

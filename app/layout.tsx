@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Ubuntu_Sans } from "next/font/google";
+import { Poppins, Lato } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -7,10 +7,19 @@ import { ThemeProvider } from "next-themes";
 import { ToastContextProvider } from "@/components/toast-context";
 import config from "@/lib/config/app-config";
 
-const ubuntuSans = Ubuntu_Sans({
-  variable: "--font-ubuntu-sans",
-  subsets: ["latin"]
-})
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-lato",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -69,7 +78,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en" suppressHydrationWarning>
-        <body className={`${ubuntuSans.variable} antialiased`}>
+        <body className={`${poppins.variable} ${lato.variable} font-sans antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
             <NuqsAdapter>
               <ToastContextProvider>
