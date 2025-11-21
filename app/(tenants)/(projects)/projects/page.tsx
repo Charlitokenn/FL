@@ -2,6 +2,7 @@ import PageHero from "@/components/ui/pageHero";
 import { GetAllProjects } from "@/lib/actions/tenants/projects.actions";
 import { Metadata } from "next";
 import { ProjectsTable } from "./columns"
+import AddContactForm from "@/components/forms/contacts-form";
 
 export const metadata: Metadata = {
   title: {
@@ -21,6 +22,8 @@ const ProjectsPage = async () => {
         subtitle={`Here you can manage all your projects `}
         showButton
         buttonText="New Project"
+        dialogTitle="New Project"
+        dialog={<p>Am the content</p>}
       />
       <ProjectsTable data={results.data ?? []}/>
     </section>

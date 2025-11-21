@@ -4,6 +4,7 @@ import { useTenantContext } from "@/lib/context-provider";
 import { Button } from "./button";
 import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
+import ReusableDialog from "../reusable-dialog";
 
 type PageHeroProps = {
   title?: string;
@@ -12,7 +13,7 @@ type PageHeroProps = {
   buttonText?: string;
   showButton?: boolean;
   dialog?: React.ReactNode; // Accepts JSX
-  dialogTitle?: string;
+  dialogTitle: string;
   dialogDescription?: string;
 };
 
@@ -37,18 +38,12 @@ const PageHero = ({
         <p className="text-sm text-muted-foreground">{subtitle}</p>
       </div>
       {showButton && 
-        <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-primary cursor-pointer"><Plus/>{buttonText}</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogDescription className="border-b pb-2">{dialogDescription}</DialogDescription>
-              </DialogHeader>
-                {dialog}
-            </DialogContent>
-        </Dialog>
+        <ReusableDialog 
+          trigger={<Button className="cursor-pointer"><Plus/>{buttonText}</Button>} 
+          title={dialogTitle} 
+          description={dialogDescription}
+          dialog={dialog}     
+        />
       }
     </div>
   );

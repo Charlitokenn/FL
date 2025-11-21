@@ -5,8 +5,11 @@ import {
     Archive,
     Download,
   DownloadIcon,
+  Eye,
+  EyeOffIcon,
   MoreHorizontal,
   Plus,
+  SquarePen,
   Text,
   Trash,
   Trash2,
@@ -42,6 +45,7 @@ import { SoftDeleteProjects } from "@/lib/actions/tenants/projects.actions";
 import Loader from "../../loading";
 import ReusableDialog from "@/components/reusable-dialog";
 import AddContactForm from "@/components/forms/contacts-form";
+import ReusableSheet from "@/components/reusable-sheet";
   
 export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     const { showToast } = useToast()
@@ -204,9 +208,32 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">
-                  Delete
+                <DropdownMenuItem className="cursor-pointer">
+                    <ReusableSheet 
+                        trigger={<div className="cursor-pointer flex gap-2 items-center"><SquarePen/>Edit</div>} 
+                        title="Editing Project"
+                        titleIcon={<SquarePen className="w-5.5 h-5.5" />}
+                        formContent={<p>This is my form</p>} 
+                        saveButtonText="Save Project"
+                    />
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                    <ReusableSheet 
+                        trigger={<div className="cursor-pointer flex gap-2 items-center"><Eye/>View</div>} 
+                        title="Viewing Project"
+                        titleIcon={<EyeOffIcon className="w-5.5 h-5.5" />}
+                        formContent={<p>This is my form</p>}
+                        hideFooter={true}
+                    />
+                </DropdownMenuItem>                
+                <DropdownMenuItem className="cursor-pointer" variant="destructive">
+                    <ReusableSheet 
+                        trigger={<div className="cursor-pointer flex gap-2 items-center"><Trash2 className="text-red-500"/>Delete</div>} 
+                        title="Viewing Project"
+                        titleIcon={<Trash2 className="w-5.5 h-5.5" />}
+                        formContent={<p>This is my form</p>}
+                        hideFooter={true}
+                    />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -331,10 +358,13 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
         table={table}
         emptyTitle="Add Projects"
         emptyDescription="No projects have been added so far!"
-        emptyContent={  <ReusableDialog 
+        emptyContent={
+                        <ReusableSheet 
                             trigger={<Button className="cursor-pointer"><Plus/>New Project</Button>} 
-                            title="New Project" 
-                            description={<AddContactForm/>}
+                            title="New Project"
+                            titleIcon={<Archive className="w-5.5 h-5.5" />}
+                            formContent={<p>This is my form</p>} 
+                            saveButtonText="Save Project"                        
                         />
                       }
         emptyMedia={<Archive/>}

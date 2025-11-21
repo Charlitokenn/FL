@@ -1,5 +1,6 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetClose,
@@ -10,32 +11,43 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Separator } from "./ui/separator";
+import { LucideIcon } from "lucide-react";
 
 interface Props {
    trigger: React.ReactNode;
    title: string;
    description?: string;
-   formContent?: React.ReactNode;
-   isInset: boolean;
+   formContent: React.ReactNode;
+   isInset?: boolean;
+   saveButtonText?: string;
+   titleIcon?: React.ReactNode;
+   hideFooter?: boolean;
 }
 
-export default function ReusableSheet({ trigger, title, description, formContent, isInset }: Props) {
+export default function ReusableSheet({ 
+    trigger, title, description, formContent, isInset = true, saveButtonText,titleIcon, hideFooter
+ }: Props) {
   return (
     <Sheet>
-      <SheetTrigger render={<Button variant="outline" />}>
+      <SheetTrigger  render={<button />}>
         {trigger}
       </SheetTrigger>
       <SheetPopup inset={isInset}>
           <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
+            <SheetTitle className="flex gap-2 items-center">
+                <div className="">{titleIcon}</div>
+                <p>{title}</p>
+            </SheetTitle>
             <SheetDescription>{description}</SheetDescription>
+            <Separator className="my-1"/>
           </SheetHeader>
-          <div className="flex flex-col gap-4 px-4">
+          <div className="flex flex-col gap-2 px-4">
             {formContent}
           </div>
-          <SheetFooter>
+          <SheetFooter hidden={hideFooter}>
             <SheetClose render={<Button variant="ghost" />}>Cancel</SheetClose>
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="cursor-pointer">{saveButtonText}</Button>
           </SheetFooter>
       </SheetPopup>
     </Sheet>
