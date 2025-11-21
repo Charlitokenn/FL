@@ -5,7 +5,7 @@ import { rootDomain } from '@/lib/utils';
 
 const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)',]);
 const isAdminRoute = createRouteMatcher(['/admin(.*)']);
-
+//TODO - Add dynamic org switching while login & dynamicdatabase/project switching
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
   const subdomain = extractSubdomain(req);

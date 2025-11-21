@@ -109,6 +109,7 @@ declare global {
     tpUrl: string | null;
     surveyUrl: string | null;
     addedBy: string | null;
+    isDeleted: boolean;
     createdAt: Date;
     updatedAt: Date;
   };

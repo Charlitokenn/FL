@@ -1,4 +1,4 @@
-import { varchar, uuid, pgTable, pgEnum, date, timestamp, text, smallint, numeric} from 'drizzle-orm/pg-core';
+import { varchar, uuid, pgTable, pgEnum, date, timestamp, text, smallint, numeric, boolean} from 'drizzle-orm/pg-core';
 
 export const APPROVAL_STATUS_ENUM = pgEnum('approval_status', ['APPROVED', 'REJECTED', 'PENDING']);
 export const GENDER_ENUM = pgEnum('gender', ['MALE', 'FEMALE']);
@@ -197,7 +197,6 @@ export const DISTRICT_ENUM = pgEnum('districts', [
   'Tanga City'
 ]);
 
-
 export const contacts = pgTable('contacts', { 
   id: uuid('id').primaryKey().defaultRandom(),
   fullName: text('full_name'),   
@@ -220,6 +219,7 @@ export const contacts = pgTable('contacts', {
   secondNOKRelationship: RELATIONSHIP_ENUM('second_NOK_Relationship'),
   clientPhoto: text('clientPhoto').unique(),  
   addedBy: text('added_by'),
+  isDeleted: boolean('is_deleted').default(false).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });
@@ -252,6 +252,7 @@ export const projects = pgTable('projects', {
   tpUrl: text('tp_url'),
   surveyUrl: text('survey_url'),
   addedBy: text('added_by'),
+  isDeleted: boolean('is_deleted').default(false).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 })

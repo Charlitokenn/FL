@@ -35,6 +35,7 @@ import { useToast } from "@/components/toast-context";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ReusableTooltip from "@/components/reusable-tooltip";
 import ReusableAlertDialog from "@/components/reusable-alert-dialog";
+import { SoftDeleteProjects } from "@/lib/actions/tenants/projects.actions";
   
 export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     const { showToast } = useToast()
@@ -235,8 +236,8 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
 
     const projects = selectedRows.map(row => row.original);
     
-    // Get all keys from the first project to use as headers
-    const headers = Object.keys(projects[0]);
+    // Get all keys from the first project and filter out 'isDeleted'
+    const headers = Object.keys(projects[0]).filter(key => key !== 'isDeleted');
     
     // Convert rows to CSV format
     const csvRows = projects.map(project => {
@@ -294,24 +295,25 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     setIsDeleting(true);
     
     try {
-        //   await onDelete(selectedIds);
-      showToast({
-        title: "Delete Successful",
-        description: `${selectedIds.length} Projects have been deleted`,
-        variant: "success",
-        showAction: false
-      })       
-      // Clear selection after successful delete
-      table.resetRowSelection();
-    } catch (error) {
-        console.error("Error deleting projects:", error);
+            await SoftDeleteProjects(selectedIds);
+            //TODO - Fix the toaster loading and move to top right
+            showToast({
+                title: "Delete Successful",
+                description: `${selectedIds.length} Projects have been deleted`,
+                variant: "success",
+                showAction: false
+            })       
+            // Clear selection after successful delete
+            table.resetRowSelection();
+        } catch (error) {
+            console.error("Error deleting projects:", error);
 
-        showToast({
-            title: "Error Deleting Projects",
-            description: `${error} `,
-            variant: "error",
-            showAction: false
-        }) 
+            showToast({
+                title: "Error Deleting Projects",
+                description: `${error} `,
+                variant: "error",
+                showAction: false
+            }) 
     } finally {
       setIsDeleting(false);
     }

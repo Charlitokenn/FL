@@ -2,6 +2,7 @@ import PageHero from "@/components/ui/pageHero";
 import { GetAllProjects } from "@/lib/actions/tenants/projects.actions";
 import { Metadata } from "next";
 import { ProjectsTable } from "./columns"
+import { cacheTag } from "next/cache";
 
 export const metadata: Metadata = {
   title: {
@@ -12,7 +13,6 @@ export const metadata: Metadata = {
 
 const ProjectsPage = async () => {
   const results = await GetAllProjects();
-  console.log({results})
 
   return (
     <section>
