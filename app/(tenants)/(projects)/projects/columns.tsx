@@ -2,13 +2,16 @@
  
 import { type Column, type ColumnDef } from "@tanstack/react-table";
 import {
+    Archive,
     Download,
   DownloadIcon,
   MoreHorizontal,
+  Plus,
   Text,
   Trash,
   Trash2,
   Trash2Icon,
+  User,
   XIcon,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
@@ -36,6 +39,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import ReusableTooltip from "@/components/reusable-tooltip";
 import ReusableAlertDialog from "@/components/reusable-alert-dialog";
 import { SoftDeleteProjects } from "@/lib/actions/tenants/projects.actions";
+import Loader from "../../loading";
+import ReusableDialog from "@/components/reusable-dialog";
+import AddContactForm from "@/components/forms/contacts-form";
   
 export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     const { showToast } = useToast()
@@ -323,6 +329,15 @@ export const ProjectsTable  = ({ data }  : { data: Project[] }) => {
     <div className="data-table-container">
       <DataTable
         table={table}
+        emptyTitle="Add Projects"
+        emptyDescription="No projects have been added so far!"
+        emptyContent={  <ReusableDialog 
+                            trigger={<Button className="cursor-pointer"><Plus/>New Project</Button>} 
+                            title="New Project" 
+                            description={<AddContactForm/>}
+                        />
+                      }
+        emptyMedia={<Archive/>}
         actionBar={
             <DataTableActionBar table={table} className="flex">
                 <Badge variant="outline" className="gap-0 rounded-md px-2 py-1">

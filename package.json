@@ -13,6 +13,7 @@
     "db:push": "npx drizzle-kit push"
   },
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.6",
     "@clerk/backend": "^2.20.0",
     "@clerk/nextjs": "^6.34.4",
     "@dnd-kit/core": "^6.3.1",

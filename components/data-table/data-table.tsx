@@ -13,16 +13,25 @@ import {
 import { getCommonPinningStyles } from "@/lib/data-table";
 import { cn } from "@/lib/utils";
 import { Library } from "lucide-react";
+import ReusableEmpty from "../reusable-empty";
 
 interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   table: TanstackTable<TData>;
   actionBar?: React.ReactNode;
+  emptyTitle?: string,
+  emptyDescription?: string,
+  emptyContent?: React.ReactNode,
+  emptyMedia?: React.ReactNode,
 }
 
 export function DataTable<TData>({
   table,
   actionBar,
   children,
+  emptyTitle,
+  emptyDescription,
+  emptyContent,
+  emptyMedia,
   className,
   ...props
 }: DataTableProps<TData>) {
@@ -82,9 +91,14 @@ export function DataTable<TData>({
               <TableRow>
                 <TableCell
                   colSpan={table.getAllColumns().length}
-                  className="h-70 text-center"
-                >
-                  No records.                  
+                  className="h-75 text-center"
+                >                 
+                  <ReusableEmpty 
+                    media={emptyMedia} 
+                    title={emptyTitle}
+                    description={emptyDescription}
+                    content={emptyContent}                  
+                  />                 
                 </TableCell>
               </TableRow>
             )}

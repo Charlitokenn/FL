@@ -9,7 +9,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const GetAllProjects = async () => {
     try {
-        await delay(10000); // 1 second delay
+        await delay(3000); // 3 second delay
         
         const results = await db.select()
                                 .from(projects)

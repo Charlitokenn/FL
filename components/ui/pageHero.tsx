@@ -27,7 +27,7 @@ const PageHero = ({
   dialogDescription,
 }: PageHeroProps) => {
   const sessionClaims = useTenantContext();
-
+//TODO - ADD a bulk add functionality
   return (
     <div className="flex items-center justify-between gap-4 -mt-3 mb-8">
       <div className="space-y-1">
