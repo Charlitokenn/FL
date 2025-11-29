@@ -3,21 +3,14 @@
 import { type Column, type ColumnDef } from "@tanstack/react-table";
 import {
     Archive,
-    Download,
     DownloadIcon,
     Edit,
-    Edit2,
     Eye,
-    EyeOffIcon,
     Loader2,
-    MoreHorizontal,
     Plus,
     SquarePen,
     Text,
-    Trash,
-    Trash2,
     Trash2Icon,
-    User,
     XIcon,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
@@ -27,30 +20,16 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useDataTable } from "@/hooks/use-data-table";
 import { formatDate } from "@/lib/format";
 import { currencyNumber, timestampToDateString } from "@/lib/utils";
 import { DataTableActionBar } from "@/components/data-table/data-table-action-bar";
 import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/toast-context";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ReusableTooltip from "@/components/reusable-tooltip";
-import ReusableAlertDialog from "@/components/reusable-alert-dialog";
 import { SoftDeleteProjects } from "@/lib/actions/tenants/projects.actions";
-import Loader from "../../loading";
-import ReusableDialog from "@/components/reusable-dialog";
-import AddContactForm from "@/components/forms/contacts-form";
 import ReusableSheet from "@/components/reusable-sheet";
-import { InputGroup } from "@/components/ui/input-group";
-import { IconRenderer } from "@/components/icons/icon-renderer";
 import ReusablePopover from "@/components/reusable-popover";
 
 export const ProjectsTable = ({ data }: { data: Project[] }) => {
@@ -227,7 +206,7 @@ export const ProjectsTable = ({ data }: { data: Project[] }) => {
                                 title="Confirm Delete?"
                                 content={
                                     <Button
-                                        size='xs'
+                                        size='sm'
                                         className="p-1 cursor-pointer w-full"
                                         onClick={handleDelete}
                                         disabled={isDeleting}
@@ -396,7 +375,7 @@ export const ProjectsTable = ({ data }: { data: Project[] }) => {
                                     description={`Permanently delete ${selectedRowsCount} projects. This action can't be undone`}
                                     content={
                                         <Button
-                                            size='xs'
+                                            size='sm'
                                             className="px-2 cursor-pointer"
                                             onClick={handleDelete}
                                             disabled={isDeleting}
