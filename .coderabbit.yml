@@ -1,0 +1,17 @@
+version: 1
+enable_static_analysis: true
+
+review:
+  auto_review_on:
+    - pull_request_opened
+    - pull_request_synchronize
+  review_modes:
+    - suggestions
+    - comments
+
+languages:
+  - javascript
+  - typescript
+  - python
+  - jsx
+  - tsx
