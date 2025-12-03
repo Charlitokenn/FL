@@ -250,7 +250,7 @@ export default function MultiStepForm() {
                                         <InputField
                                             type="text"
                                             value={formData.name}
-                                            // onChange={(e) => updateFormData('name', e.target.value)}
+                                            onChange={(e) => updateFormData('name', e.target.value)}
                                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition ${errors.name ? 'border-red-500' : 'border-gray-300'
                                                 }`}
                                             placeholder="e.g. Stephen King"
